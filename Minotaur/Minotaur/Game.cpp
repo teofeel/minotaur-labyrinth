@@ -103,7 +103,33 @@ bool Game::move_player(char c) {
 
 	return true;
 }
+
+void Game::move_minotaur() {
+	// scan maze to find M
+
+	// once found M save coordinates
+
+	// check surrounding cells if there is wall or player
+
+	// if player is near move to that cell
+
+	// if not choose random cell to move
+
+}
+
 bool Game::end_game() {
+	int br = 0;
+
+	for (int i = 0; i < this->maze.getM(); i++) {
+		for (int j = 0; j < this->maze.getN(); j++) {
+			if (this->maze.getMaze().at(i).at(j) == 'R' || this->maze.getMaze().at(i).at(j) == 'I')
+				br++;
+		}
+	}
+
+	if (br < 2)
+		return true;
+
 	return false;
 }
 
@@ -117,8 +143,11 @@ ostream& operator<<(ostream& stream, Game& obj) {
 
 		for (int i = startX; i < endX; i++) {
 			
+			if (i >= obj.maze.getM()) {
+				continue;
+			}
+
 			for (int j = startY; j < endY; j++) {
-				
 				stream << obj.maze.getMaze().at(i).at(j);
 			}
 			stream << endl;

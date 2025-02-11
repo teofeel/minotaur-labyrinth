@@ -21,8 +21,17 @@ void gameplay(Game &game) {
 		if (!game.move_player(c))
 			continue;
 
+		// move minotaur
+
+		//check game end
+		if (game.end_game())
+			break;
+
 		cout << game << endl;
 	} while (true);
+
+	cout << game << endl;
+	cout << "Game End" << endl;
 }
 
 void load_game() {
