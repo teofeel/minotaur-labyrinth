@@ -21,13 +21,15 @@ void gameplay(Game &game) {
 		if (!game.move_player(c))
 			continue;
 
-		// move minotaur
+		// move minotaur, not done yet
+		game.move_minotaur();
 
 		//check game end
 		if (game.end_game())
 			break;
 
 		cout << game << endl;
+
 	} while (true);
 
 	cout << game << endl;
@@ -59,9 +61,9 @@ void load_game() {
 
 int main()
 {
-	Labyrinth lab(31,47, 3);
+	//Labyrinth lab(31,47, 3);
 
-	cout << lab << endl;
+	//cout << lab << endl;
 
 	load_game();
 	/*Player p(1, 42, 'R');

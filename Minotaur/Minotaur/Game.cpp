@@ -104,17 +104,71 @@ bool Game::move_player(char c) {
 	return true;
 }
 
-void Game::move_minotaur() {
-	// scan maze to find M
+void Game::move_minotaur_helper(int m, int n) {
+	vector<pair<int, int>> new_coordinates = { {m + 1, n}, {m - 1,n}, {m, n + 1}, {m, n-1} };
+	vector<int> remove_indexes;
 
-	// once found M save coordinates
+	for (int i = 0; i < new_coordinates.size(); i++) {
+	
+		if (new_coordinates.at(i).first <= 0 || new_coordinates.at(i).first >= this->maze.getM()
+			|| new_coordinates.at(i).second <= 0 || new_coordinates.at(i).second >= this->maze.getN()) {
+			remove_indexes.push_back(i);
+			continue;
+		}
+			
+		// check surrounding cells if there is wall or player
+		if (this->maze.getMaze().at(new_coordinates.at(i).first).at(new_coordinates.at(i).second) == '#') {
+			remove_indexes.push_back(i);
+			continue;
+		}
+		if (this->maze.getMaze().at(new_coordinates.at(i).first).at(new_coordinates.at(i).second) == 'M') {
+			remove_indexes.push_back(i);
+			continue;
+		}
 
-	// check surrounding cells if there is wall or player
 
-	// if player is near move to that cell
+		// if player is near move to that cell
+		if (this->maze.getMaze().at(new_coordinates.at(i).first).at(new_coordinates.at(i).second) == 'R' && this->player.getCanDefend()) {
+			remove_indexes.push_back(i);
+			continue;
+		}
+		else if (this->maze.getMaze().at(new_coordinates.at(i).first).at(new_coordinates.at(i).second) == 'R' && this->player.getCanDefend()) {
+			remove_indexes.push_back(i);
+			continue;
+		}
+		else if (this->maze.getMaze().at(new_coordinates.at(i).first).at(new_coordinates.at(i).second) == 'R') {
+			this->maze.getMaze().at(m).at(n).setType(' ');
+			this->maze.getMaze().at(new_coordinates.at(i).first).at(new_coordinates.at(i).second).setType('M');
+			return;
+		}
+	}
+
+	for (int i = remove_indexes.size()-1; i >= 0; i--) {
+		new_coordinates.erase(new_coordinates.begin() + remove_indexes.at(i));
+	}
 
 	// if not choose random cell to move
+	int new_coordinates_len = new_coordinates.size();
+	int pair = rand() % new_coordinates_len;
+	this->maze.getMaze().at(m).at(n).setType(' ');
+	cout << new_coordinates.at(pair).first << " " << new_coordinates.at(pair).second << endl;
 
+	this->maze.getMaze().at(new_coordinates.at(pair).first).at(new_coordinates.at(pair).second).setType('M');
+
+}
+
+void Game::move_minotaur() {
+	// scan maze to find M
+	for(int i=0; i< this->maze.getM(); i++){
+		for (int j = 0; j < this->maze.getN(); j++) {
+			if (this->maze.getMaze().at(i).at(j) == 'M') {
+				// once found M save coordinates
+				move_minotaur_helper(i, j);
+				return;
+			}
+
+		}
+	}
 }
 
 bool Game::end_game() {

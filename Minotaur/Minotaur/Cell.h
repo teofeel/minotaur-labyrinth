@@ -23,7 +23,7 @@ public:
 	void setType(char t);
 
 
-	friend ostream& operator<<(ostream& strea, const Cell& obj);
+	friend ostream& operator<<(ostream& stream, const Cell& obj);
 	friend bool operator == (const Cell& obj1, const Cell& obj2);
 	friend bool operator == (const Cell& obj, const char& name);
 	

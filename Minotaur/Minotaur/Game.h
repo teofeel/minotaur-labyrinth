@@ -17,6 +17,7 @@ private:
 
 	bool check_can_move(int x, int y);
 	void add_item_player();
+	void move_minotaur_helper(int m, int n);
 public:
 	Game(Labyrinth& m);
 
