@@ -6,8 +6,26 @@
 #include "Player.h"
 #include "Item.h"
 #include "Game.h"
+#include <chrono>
 
 using namespace std;
+using namespace std::chrono;
+
+
+void input_number(int &value, string input_str) {
+	do {
+		cout << input_str;
+		cin >> value;
+
+		if (!cin) {
+			cin.clear();
+			cin.ignore(numeric_limits<std::streamsize>::max(), '\n');
+			continue;
+		}
+
+		break;
+	} while (true);
+}
 
 void gameplay(Game &game) {
 	do {
@@ -18,12 +36,15 @@ void gameplay(Game &game) {
 		if (c == 'q' || c == 'Q')
 			break;
 
-		if (!game.move_player(c))
+		if (!game.move_player(c)) {
+			cin.clear();
+			cin.ignore(1000,'\n');
 			continue;
-
-		// move minotaur, not done yet
+		}
+			
+		// move minotaur
 		game.move_minotaur();
-
+	
 		//check game end
 		if (game.end_game())
 			break;
@@ -34,23 +55,31 @@ void gameplay(Game &game) {
 
 	cout << game << endl;
 	cout << "Game End" << endl;
+
 }
+
+
 
 void load_game() {
 	int n;
-	cout << "Enter dimension m: ";
-	cin >> n;
+	input_number(n, "Enter dimension n: ");
 
 	int m;
-	cout << "Enter dimension m: ";
-	cin >> m;
+	input_number(m, "Enter dimension m: ");
 
 	int o;
-	cout << "Enter number of items (must be greater than 3): ";
-	cin >> o;
+	do {
+		input_number(o, "Enter number of items (must be greater than 3): ");
+	} while (!o || o < 3);
+	
 
+	auto start = high_resolution_clock::now();
 
 	Labyrinth maze(n, m, o);
+
+	auto end = high_resolution_clock::now();
+	auto duration = duration_cast<microseconds>(end - start);
+	cout << "Duration to create maze: " << duration.count() << "ms"<< endl;
 
 	Game game(maze);
 
@@ -61,36 +90,7 @@ void load_game() {
 
 int main()
 {
-	//Labyrinth lab(31,47, 3);
-
-	//cout << lab << endl;
-
 	load_game();
-	/*Player p(1, 42, 'R');
-
-	Item i1("Fog of War");
-	Item i2("Shield");
-
-	p.addItem(i1);
-
-	cout << p << endl;
-	p.shorten_lifespan_items();
-	p.addItem(i2);
-	cout << p << endl;
-
-	//p.shorten_lifespan_items();
-	//p.shorten_lifespan_items();
-	//p.shorten_lifespan_items();
-
-	//p.remove_inactive_items();
-
-	//cout << p << endl;
-
-	Game g(lab);
-	g.setPlayer(p);
-	
-	cout << g << endl;*/
-	
 	
     return 0;
 }

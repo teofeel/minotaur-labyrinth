@@ -11,7 +11,7 @@
 
 using namespace std;
 
-class Player :public Cell {
+class Player : public Cell {
 private:
 	vector<Item> items;
 	bool can_defend_from_minotaur;	// kada dodje do pomeranja minotaura na plejera ako plejer ima shield minotaur mora drugi potez da napravi
@@ -42,6 +42,8 @@ public:
 	void remove_inactive_items();
 
 	friend ostream& operator<<(ostream& stream, const Player& obj);
+
+	~Player();
 };
 
 #endif

@@ -149,3 +149,7 @@ ostream& operator<<(ostream& stream, const Player& obj) {
 
 	return stream;
 }
+
+Player::~Player() {
+
+}

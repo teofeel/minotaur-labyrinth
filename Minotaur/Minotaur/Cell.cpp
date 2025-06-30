@@ -61,3 +61,7 @@ bool operator == (const Cell& obj, const char& name) {
 	return obj.type == name;
 }
 
+Cell::~Cell(){
+
+}
+

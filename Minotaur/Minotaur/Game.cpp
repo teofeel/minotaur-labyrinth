@@ -16,7 +16,6 @@ using namespace std;
 
 
 Game::Game(Labyrinth& m) : maze(m), player() {
-	
 	for (int i = 0; i < this->maze.getN(); i++) {
 		
 		for (int j = 0; j < this->maze.getM(); j++) {
@@ -35,10 +34,11 @@ void Game::setPlayer(Player& p) {
 }
 
 bool Game::check_can_move(int x, int y) {
-	if (this->maze.getMaze().at(x).at(y).getType() == '#')
-		return false;
-	else if (this->maze.getMaze().at(x).at(y).getType() == '#' && this->player.getCanMove())
+	if (this->maze.getMaze().at(x).at(y).getType() == '#' && this->player.getCanMove())
 		return true;
+	else if (this->maze.getMaze().at(x).at(y).getType() == '#')
+		return false;
+		
 
 	return true;
 }
@@ -72,6 +72,9 @@ bool Game::move_player(char c) {
 	else if (c == 'D' || c == 'd') {
 		x2 = x1;
 		y2 = y1+1;
+	}
+	else {
+		return false;
 	}
 
 	if (!this->check_can_move(x2, y2)) {
@@ -139,6 +142,7 @@ void Game::move_minotaur_helper(int m, int n) {
 		else if (this->maze.getMaze().at(new_coordinates.at(i).first).at(new_coordinates.at(i).second) == 'R') {
 			this->maze.getMaze().at(m).at(n).setType(' ');
 			this->maze.getMaze().at(new_coordinates.at(i).first).at(new_coordinates.at(i).second).setType('M');
+
 			return;
 		}
 	}
@@ -151,7 +155,6 @@ void Game::move_minotaur_helper(int m, int n) {
 	int new_coordinates_len = new_coordinates.size();
 	int pair = rand() % new_coordinates_len;
 	this->maze.getMaze().at(m).at(n).setType(' ');
-	cout << new_coordinates.at(pair).first << " " << new_coordinates.at(pair).second << endl;
 
 	this->maze.getMaze().at(new_coordinates.at(pair).first).at(new_coordinates.at(pair).second).setType('M');
 
@@ -159,8 +162,8 @@ void Game::move_minotaur_helper(int m, int n) {
 
 void Game::move_minotaur() {
 	// scan maze to find M
-	for(int i=0; i< this->maze.getM(); i++){
-		for (int j = 0; j < this->maze.getN(); j++) {
+	for(int i=0; i< this->maze.getN(); i++){
+		for (int j = 0; j < this->maze.getM(); j++) {
 			if (this->maze.getMaze().at(i).at(j) == 'M') {
 				// once found M save coordinates
 				move_minotaur_helper(i, j);
@@ -174,10 +177,13 @@ void Game::move_minotaur() {
 bool Game::end_game() {
 	int br = 0;
 
-	for (int i = 0; i < this->maze.getM(); i++) {
-		for (int j = 0; j < this->maze.getN(); j++) {
-			if (this->maze.getMaze().at(i).at(j) == 'R' || this->maze.getMaze().at(i).at(j) == 'I')
+	for (int i = 0; i < this->maze.getN(); i++) {
+		for (int j = 0; j < this->maze.getM(); j++) {
+			if (this->maze.getMaze().at(i).at(j) == 'R' || this->maze.getMaze().at(i).at(j) == 'I') {
+				
 				br++;
+			}
+				
 		}
 	}
 
@@ -215,4 +221,8 @@ ostream& operator<<(ostream& stream, Game& obj) {
 	stream << obj.player;
 
 	return stream;
+}
+
+Game::~Game() {
+
 }

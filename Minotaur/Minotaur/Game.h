@@ -32,5 +32,8 @@ public:
 	bool end_game();												// nakon svakog poteza proveri da li postoji R i I (ako nesta od ova dva ne postoji kraj igre je)
 
 	friend ostream& operator<<(ostream& stream,  Game& obj);
+
+
+	~Game();
 };
 #endif

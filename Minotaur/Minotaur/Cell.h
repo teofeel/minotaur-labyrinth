@@ -27,6 +27,8 @@ public:
 	friend bool operator == (const Cell& obj1, const Cell& obj2);
 	friend bool operator == (const Cell& obj, const char& name);
 	
+
+	~Cell();
 };
 
 #endif

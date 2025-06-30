@@ -11,6 +11,7 @@
 #include "Cell.h"
 
 using namespace std;
+std::mt19937 rng(std::random_device{}());
 
 void Labyrinth::dfs(int x, int y, int dx[], int dy[]) {
 	stack<pair<int, int>> s;
@@ -22,7 +23,8 @@ void Labyrinth::dfs(int x, int y, int dx[], int dy[]) {
         s.pop();
 
         vector<int> directions = {0, 1, 2, 3};
-        shuffle(directions.begin(), directions.end(), default_random_engine(rand()));
+        //shuffle(directions.begin(), directions.end(), default_random_engine(rand()));
+		shuffle(directions.begin(), directions.end(), rng);
 
         for (int d : directions) {
             int nx = cx + 2* dx[d];
@@ -57,7 +59,7 @@ bool Labyrinth::is_exit_reachable(int entrance_x, int entrance_y, int exit_index
 			int nx = x + dx[d];
 			int ny = y + dy[d];
 
-			if (nx > 0 && nx < n - 1 && ny > 0 && ny < m - 1 && (matrix.at(nx).at(ny).getType() == ' ' || matrix.at(nx).at(ny).getType()=='R') && !visited[nx][ny]) {
+			if (nx >= 1 && nx < n - 1 && ny >= 1 && ny < m - 1 && (matrix.at(nx).at(ny).getType() == ' ' || matrix.at(nx).at(ny).getType()=='R') && !visited[nx][ny]) {
 				visited[nx][ny] = true;
 				to_visit.push({ nx, ny });
 			}
@@ -78,7 +80,7 @@ void Labyrinth::create_minotaur_items() {
 		}
 	} while (true);
 
-	int items_number = this->orudje;
+	int items_number = this->items;
 	do {
 		int item_x = (rand() % (m - 2)) + 1;
 		int item_y = (rand() % (n - 2)) + 1;
@@ -110,6 +112,48 @@ void Labyrinth::ensure_path_to_exit(int entrance_x, int entrance_y, int exit_ind
 	}
 }
 
+void Labyrinth::break_full_walls() {
+	for (int i = 1; i < this->n-1; i++) {
+		bool full_wall = true;
+
+		for (int j = 1; j < this->m - 1; j++) {
+			if (this->matrix.at(i).at(j).getType() != '#') {
+				full_wall = false;
+				break;
+			}
+		}
+
+		if (full_wall) {
+			int br = m - 2;
+			while (br>0){
+				bool crave_position = rand() % 2;
+				if (crave_position) this->matrix.at(i).at(br).setType(' ');
+
+				br--;
+			}
+		}
+	}
+
+	for (int j = 1; j < this->m - 1; j++) {
+		bool full_wall = true;
+		for (int i = 1; i < this->n - 1; i++) {
+			if (this->matrix.at(i).at(j).getType() != '#') {
+				full_wall = false;
+				break;
+			}
+		}
+		if (full_wall) {
+			int br = n - 2;
+			while (br>0) {
+				bool crave_position = rand() % 2;
+				if (crave_position) this->matrix.at(br).at(j).setType(' ');
+
+				br--;
+			}
+		}
+	}
+}
+
 void Labyrinth::create_matrix() {
 	int entrance_index = (rand() % (m - 2))+1;
 	int exit_index = (rand() % (m - 2)) + 1;
@@ -122,14 +166,18 @@ void Labyrinth::create_matrix() {
 	int dy[] = {1,-1,0,0};
 
 	this->dfs(1, entrance_index, dx, dy);
+	this->break_full_walls();
 	this->ensure_path_to_exit(1, entrance_index, exit_index, dx, dy);
 	this->create_minotaur_items(); 
+
 }
+
+
 
 Labyrinth::Labyrinth(int nn, int mm, int o) {
 	this->n = nn;
 	this->m = mm;
-	this->orudje = o;
+	this->items = o;
 
 	for (int i = 0; i < n; i++) {
 		vector<Cell> new_vector;
@@ -153,8 +201,8 @@ int Labyrinth::getM() {
 	return this->m;
 }
 
-int Labyrinth::getOrudje() {
-	return this->orudje;
+int Labyrinth::getItems() {
+	return this->items;
 }
 
 vector<vector<Cell>>& Labyrinth::getMaze() {
@@ -169,8 +217,8 @@ void Labyrinth::setN(int nn) {
 void Labyrinth::setM(int mm) {
 	this->m = mm;
 }
-void Labyrinth::setOrudje(int o) {
-	this->orudje = orudje;
+void Labyrinth::setItems(int o) {
+	this->items = o;
 }
 
 
@@ -183,4 +231,8 @@ ostream& operator<<(ostream& stream, const Labyrinth& obj) {
 	}
 
 	return stream;
+}
+
+Labyrinth::~Labyrinth() {
+
 }
