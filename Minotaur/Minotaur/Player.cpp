@@ -10,6 +10,13 @@
 
 using namespace std;
 
+/*
+	funkcija za "dodavanje" powerupa
+	Parametri:
+		- Item& item (referenca na objekat)
+	Opis:
+		proveri koji je item u pitanju i playerov atribut postavi na true
+*/
 void Player::add_powerup(Item& item) {
 	if (item == "Fog of War") {
 		this->cant_see = true;
@@ -25,6 +32,13 @@ void Player::add_powerup(Item& item) {
 	}
 }
 
+/*
+	funkcija za "brisanje" powerupa
+	Parametri:
+		- Item& item (referenca na objekat)
+	Opis:
+		proveri koji je item u pitanju i playerov atribut postavi na false
+*/
 void Player::remove_powerup(Item& item) {
 	if (item == "Fog of War") {
 		this->cant_see = false;
@@ -109,7 +123,11 @@ void Player::setCantSee(bool b) {
 }
 
 
-
+/*
+	funkcija za skracivanje lifespana itemu
+	Opis:
+		za svaki item u vektoru, poziva se metoda klase Item koja mu skracuje lifespan
+*/
 void Player::shorten_lifespan_items() {
 	for (Item& item : this->items) {
 		item.shorten_lifespan();
@@ -118,6 +136,13 @@ void Player::shorten_lifespan_items() {
 	
 }
 
+/*
+	funkcija za dotrajale iteme
+	Opis:
+		prodje kroz sve iteme koje player poseduje,
+		ako je nekom itemu lifespan <= 0, on ga izbaci
+		posto izbacuje item, onaj naredni mora da ubaci na njegovo mesto
+*/
 void Player::remove_inactive_items() {
 	vector<string> name_item;
 	for (int i = 0; i < this->items.size(); i++) {

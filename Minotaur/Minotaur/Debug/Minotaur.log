@@ -1,4 +1,17 @@
-﻿  Game.cpp
-c:\users\teodo\documents\ftn\oop 2\projekat\oop2-projekat\minotaur\minotaur\game.cpp(114): warning C4018: '<': signed/unsigned mismatch
+﻿  Minotaur.cpp
+  Labyrinth.cpp
+c:\users\teodo\documents\ftn\oop 2\projekat\oop2-projekat\minotaur\minotaur\labyrinth.cpp(174): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\teodo\documents\ftn\oop 2\projekat\oop2-projekat\minotaur\minotaur\labyrinth.cpp(193): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
+  Game.cpp
+c:\users\teodo\documents\ftn\oop 2\projekat\oop2-projekat\minotaur\minotaur\game.cpp(148): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+  Compiling...
+  Player.cpp
+c:\users\teodo\documents\ftn\oop 2\projekat\oop2-projekat\minotaur\minotaur\player.cpp(123): warning C4018: '<': signed/unsigned mismatch
+c:\users\teodo\documents\ftn\oop 2\projekat\oop2-projekat\minotaur\minotaur\player.cpp(132): warning C4018: '<': signed/unsigned mismatch
+c:\users\teodo\documents\ftn\oop 2\projekat\oop2-projekat\minotaur\minotaur\player.cpp(133): warning C4018: '<': signed/unsigned mismatch
+  Gameplay.cpp
+  Cell.cpp
+  Generating Code...
   Minotaur.vcxproj -> C:\Users\teodo\Documents\FTN\OOP 2\Projekat\oop2-projekat\Minotaur\Debug\Minotaur.exe
   Minotaur.vcxproj -> C:\Users\teodo\Documents\FTN\OOP 2\Projekat\oop2-projekat\Minotaur\Debug\Minotaur.pdb (Full PDB)

@@ -13,6 +13,15 @@
 using namespace std;
 std::mt19937 rng(std::random_device{}());
 
+/*
+	funkcija za kreiranje lavirinta/levela
+	parametri: 
+		- x,y (pocetna pozicija)
+		- dx[] i dy[] (mogucnosti kretanja -> 4 mogucnosti: gore,desno,dole,levo)
+	Opis:
+		koristi DFS za generisanje lavirinta
+		DFS probija zidove i pravi putove, izbor sledece pozicije za probijanje je random
+*/
 void Labyrinth::dfs(int x, int y, int dx[], int dy[]) {
 	stack<pair<int, int>> s;
     s.push({x, y});
@@ -40,6 +49,16 @@ void Labyrinth::dfs(int x, int y, int dx[], int dy[]) {
     }
 }
 
+
+/*
+	funkcija koja proverava da li je moguce izaci iz lavirinta
+	parametri: 
+		- int entrance_x, entrance_y (ulaz, pocetna lokacija odakle krece potragu)
+		- int exit_index (gde se nalazi izlaz)
+		- int dx[], dy[] (mogucnosti kretanja -> 4 mogucnosti: gore,desno,dole,levo)
+	Opis: 
+		koristi dfs da pronadje izlaz
+*/
 bool Labyrinth::is_exit_reachable(int entrance_x, int entrance_y, int exit_index, int dx[], int dy[]) {
 	vector<vector<bool>> visited(n, vector<bool>(m, false));
 	stack<pair<int, int>> to_visit;
@@ -69,12 +88,19 @@ bool Labyrinth::is_exit_reachable(int entrance_x, int entrance_y, int exit_index
 	return false; 
 }
 
+
+/*
+	funkcija za kreiranje minotaura i itema
+	Opis:
+		random se generise pozicija minotaura, ako je ta pozicija prazna na nju se postavlja minotaur
+		isto vazi i za predmet, samo jos vodi racuna o broju predmeta i radi dok se svi ne generisu
+*/
 void Labyrinth::create_minotaur_items() {
 	do {
 		int minotaur_x = (rand() % (m - 2)) + 1;
 		int minotaur_y = (rand() % (n - 2)) + 1;
 
-		if (this->matrix.at(minotaur_y).at(minotaur_x).getType() != '#') {
+		if (this->matrix.at(minotaur_y).at(minotaur_x).getType() == ' ') {
 			this->matrix.at(minotaur_y).at(minotaur_x).setType('M');
 			break;
 		}
@@ -93,6 +119,17 @@ void Labyrinth::create_minotaur_items() {
 
 }
 
+/*
+	funkcija koja se brine o tome da postoji put do izlaza
+	Parametri:
+		- int entrance_x, entrance_y (ulaz, pocetna lokacija odakle krece potragu)
+		- int exit_index (gde se nalazi izlaz)
+		- int dx[], dy[] (mogucnosti kretanja -> 4 mogucnosti: gore,desno,dole,levo)
+	Opis:
+		samo ako se ne moze pronaci izlaz ova funkcija izvrsava svoju namenu
+		probija se direktan put duz pravih linija do izlaza
+		sve celije, sem izlaza, se postavljaju na ' '
+*/
 void Labyrinth::ensure_path_to_exit(int entrance_x, int entrance_y, int exit_index, int dx[], int dy[]) {
 	if (!is_exit_reachable(entrance_x, entrance_y, exit_index, dx, dy)) {
 		int current_x = entrance_x;
@@ -112,6 +149,14 @@ void Labyrinth::ensure_path_to_exit(int entrance_x, int entrance_y, int exit_ind
 	}
 }
 
+/*
+	funkcija koja probija zidove koji su celom duzinom/sirinom pune zidove
+	Opis:
+		u slucaju da algoritam ostavi neku sirinu/visinu celom duzinom pun zid, ova funkcija ce probiti
+		probijanje se vrsi random, te celije se postavljaju da su ' '
+	Napomena:
+		pun zid se smatra jedino ako je '#'
+*/
 void Labyrinth::break_full_walls() {
 	for (int i = 1; i < this->n-1; i++) {
 		bool full_wall = true;
@@ -154,6 +199,13 @@ void Labyrinth::break_full_walls() {
 	}
 }
 
+/*
+	funkcija za generisanje levela
+	Opis:
+		ova funkcija kreira game level
+		postavlja ulaz, izlaz, robota
+		poziva funkcije za kreiranje prolaza, minotaura, predmeta i provere
+*/
 void Labyrinth::create_matrix() {
 	int entrance_index = (rand() % (m - 2))+1;
 	int exit_index = (rand() % (m - 2)) + 1;
@@ -178,7 +230,7 @@ Labyrinth::Labyrinth(int nn, int mm, int o) {
 	this->n = nn;
 	this->m = mm;
 	this->items = o;
-
+	//this->matrix = vector<vector<Cell>>(n, vector<Cell>(m));
 	for (int i = 0; i < n; i++) {
 		vector<Cell> new_vector;
 		this->matrix.push_back(new_vector);

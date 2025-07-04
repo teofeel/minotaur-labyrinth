@@ -21,7 +21,9 @@ int Item::getLifespan() {
 	return this->lifespan;
 }
 
-
+/*
+	funkcija koja smanjuje lifespan, menja polje lifespan
+*/
 void Item::shorten_lifespan() {
 	this->lifespan--;
 }
@@ -39,4 +41,8 @@ bool operator==(const Item& obj1, const Item& obj2) {
 
 bool operator==(const Item& obj1, const string& n) {
 	return obj1.name == n;
+}
+
+Item::~Item() {
+
 }

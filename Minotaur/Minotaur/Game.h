@@ -15,9 +15,9 @@ private:
 	Labyrinth maze;
 	Player player;
 
-	bool check_can_move(int x, int y);
-	void add_item_player();
-	void move_minotaur_helper(int m, int n);
+	bool check_can_move(int x, int y);								// provera mogucnosti kretanja za playera
+	void add_item_player();											// dodavanje itema playeru, od ponudjenih mogucnosti odabere jednu i dodeli playeru
+	void move_minotaur_helper(int m, int n);						// helper za pomeranje minotaura, vrsi proveru mogucnosti za pomeranje i random izabere
 public:
 	Game(Labyrinth& m);
 
@@ -27,8 +27,9 @@ public:
 	void setMaze(Labyrinth& m);
 	void setPlayer(Player& p);
 
-	bool move_player(char c);
-	void move_minotaur();
+	bool move_player(char c);										// pomeranje igraca
+	void move_minotaur();											// pomeranje minotaura	
+	
 	bool end_game();												// nakon svakog poteza proveri da li postoji R i I (ako nesta od ova dva ne postoji kraj igre je)
 
 	friend ostream& operator<<(ostream& stream,  Game& obj);

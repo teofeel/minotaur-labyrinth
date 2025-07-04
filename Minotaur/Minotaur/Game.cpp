@@ -33,6 +33,14 @@ void Game::setPlayer(Player& p) {
 	this->player = p;
 }
 
+/*
+	pomocna funkcija za proveru pomeranja player-a
+	parametri: 
+		- x i y (pozicija na koju player oce da se pomeri)
+	povratna vrednost:
+		- bool
+	ako player ima cekic onda mu se omogucava prolaz kroz zid
+*/
 bool Game::check_can_move(int x, int y) {
 	if (this->maze.getMaze().at(x).at(y).getType() == '#' && this->player.getCanMove())
 		return true;
@@ -43,6 +51,12 @@ bool Game::check_can_move(int x, int y) {
 	return true;
 }
 
+/*
+	funkcija za generisanje predmeta igracu
+	Opis:
+		random se odabere predmet koji ce generisati igracu 
+		onda se dodaje playeru pomocu metode addItem(Item item)
+*/
 void Game::add_item_player() {
 	// random generise item
 	vector<string> items = { "Fog of War", "Shield", "Sword", "Hammer"};
@@ -53,6 +67,17 @@ void Game::add_item_player() {
 	this->player.addItem(items[index]);
 }
 
+/*
+	funkcija za pomeranje igraca
+	parametri: 
+		- char c (unos sa tastature)
+	povratna vrednost: 
+		- bool
+	opis:
+		provera koji je karakter, mogucnost pomeranja igraca na tu poziciju
+		nakon toga se izvrse propratne metode playera vezane za predmete
+		i na kraju se player pomeri
+*/
 bool Game::move_player(char c) {
 	int x1 = this->player.getI();
 	int y1 = this->player.getJ();
@@ -107,6 +132,15 @@ bool Game::move_player(char c) {
 	return true;
 }
 
+/*
+	Pomocna funkcija za pomeranje minotaura
+	Parametri: 
+		-m,n (pozicija minotaura)
+	Opis:
+		generisanje novih mogucih pozicija za minotaura i provera pomneranja minotaura na njih
+		ako se player nalazi do minotaura i moze da ga ubije, pomera se na tu
+		na kraju se od mogucih pozicija koje su prosle uslove bira jedna
+*/
 void Game::move_minotaur_helper(int m, int n) {
 	vector<pair<int, int>> new_coordinates = { {m + 1, n}, {m - 1,n}, {m, n + 1}, {m, n-1} };
 	vector<int> remove_indexes;
@@ -135,10 +169,10 @@ void Game::move_minotaur_helper(int m, int n) {
 			remove_indexes.push_back(i);
 			continue;
 		}
-		else if (this->maze.getMaze().at(new_coordinates.at(i).first).at(new_coordinates.at(i).second) == 'R' && this->player.getCanDefend()) {
+		/*else if (this->maze.getMaze().at(new_coordinates.at(i).first).at(new_coordinates.at(i).second) == 'R' && this->player.getCanDefend()) {
 			remove_indexes.push_back(i);
 			continue;
-		}
+		}*/
 		else if (this->maze.getMaze().at(new_coordinates.at(i).first).at(new_coordinates.at(i).second) == 'R') {
 			this->maze.getMaze().at(m).at(n).setType(' ');
 			this->maze.getMaze().at(new_coordinates.at(i).first).at(new_coordinates.at(i).second).setType('M');
@@ -160,6 +194,12 @@ void Game::move_minotaur_helper(int m, int n) {
 
 }
 
+/*
+	funkcija za pomeranje minotaura
+	Opis:
+		prvo pronadje minotaura u lavirintu 
+		zatim prosledi njegove parametre pomocnoj za pomeranje minotaura
+*/
 void Game::move_minotaur() {
 	// scan maze to find M
 	for(int i=0; i< this->maze.getN(); i++){
@@ -174,6 +214,15 @@ void Game::move_minotaur() {
 	}
 }
 
+
+/*
+	funkcija koja proverava kraj igre
+	povratna vrednost: 
+		-bool
+	Opis:
+		funkcija pretrazi da li postoje R ili I
+		ako jedan od njih ne postoji vraca true (kraj igre)
+*/
 bool Game::end_game() {
 	int br = 0;
 
@@ -194,7 +243,13 @@ bool Game::end_game() {
 }
 
 
-
+/*
+	overload operatora za ispis
+	Opis:
+		ako player ima maglu rata, smanjuje ispis matrice lavirinta na 3x3 oko playera
+		u suprotnom ispisuje celu
+		ispisuje i predmete + njihov lifespan
+*/
 ostream& operator<<(ostream& stream, Game& obj) {
 	if (obj.player.getCantSee()) {
 		// potrebno uzeti podmatricu 3x3 tako da je player u sredini (maks jedan red iznad/ispod, levo/desno u zavisnosti od pozicije)

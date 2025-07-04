@@ -16,11 +16,13 @@ public:
 	string getName();
 	int getLifespan();
 
-	void shorten_lifespan();
+	void shorten_lifespan();		// funkcija koja menja polje lifespan
 
 	friend ostream& operator<<(ostream& stream, const Item& obj);
 	friend bool operator==(const Item& obj1, const Item& obj2);
 	friend bool operator==(const Item& obj1, const string& n);
+
+	~Item();
 };
 
 #endif

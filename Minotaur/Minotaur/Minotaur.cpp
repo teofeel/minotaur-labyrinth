@@ -11,7 +11,14 @@
 using namespace std;
 using namespace std::chrono;
 
-
+/*
+	funkcija koja proverava da li je unos dobar
+	parametri: 
+		- int &value (referenca na value) 
+		- string input_str (ispisuje se prilikom unosa)
+	Opis:
+		ova funkcija radi samo za numericke tipove
+*/
 void input_number(int &value, string input_str) {
 	do {
 		cout << input_str;
@@ -27,6 +34,12 @@ void input_number(int &value, string input_str) {
 	} while (true);
 }
 
+/*
+	funkcija za igranje igre
+	Opis:
+		kao parametar prima referencu na objekat klase Game
+		korisnik unosom na tastaturu pomera robota
+*/
 void gameplay(Game &game) {
 	do {
 		char c;
@@ -59,7 +72,12 @@ void gameplay(Game &game) {
 }
 
 
-
+/*
+	funkcija za ucitavanje igre (pravljenje lavirinta)
+	Opis:
+		korisnik unosi dimenzije matrice + broj predmeta u lavirintu
+		nakon unosa pravi se lavirint i krece igra
+*/
 void load_game() {
 	int n;
 	input_number(n, "Enter dimension n: ");
