@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "stdafx.h"
 #include <iostream>
 #include <vector>
@@ -135,14 +135,22 @@ void Labyrinth::ensure_path_to_exit(int entrance_x, int entrance_y, int exit_ind
 		int current_x = entrance_x;
 		int current_y = entrance_y;
 
-		while (current_x != n-1 || current_y != exit_index) {
-			if (current_x < n-1) current_x++;
-			else if (current_x > n-1) current_x--;
-
+		while (!(current_x == n - 2 && current_y == exit_index)) {
+			// Prvo pomeraj po Y osi
 			if (current_y < exit_index) current_y++;
 			else if (current_y > exit_index) current_y--;
 
-			matrix.at(current_x).at(current_y).setType(' ');
+			if (current_x != n - 1 && matrix.at(current_x).at(current_y).getType() == '#') {
+				matrix.at(current_x).at(current_y).setType(' ');
+			}
+
+			// Onda po X osi
+			if (current_x < n - 2) current_x++;
+			else if (current_x > n - 2) current_x--;
+
+			if (current_x != n - 1 && matrix.at(current_x).at(current_y).getType() == '#') {
+				matrix.at(current_x).at(current_y).setType(' ');
+			}
 		}
 
 		matrix.at(n - 1).at(exit_index).setType('I');
@@ -221,7 +229,6 @@ void Labyrinth::create_matrix() {
 	this->break_full_walls();
 	this->ensure_path_to_exit(1, entrance_index, exit_index, dx, dy);
 	this->create_minotaur_items(); 
-
 }
 
 

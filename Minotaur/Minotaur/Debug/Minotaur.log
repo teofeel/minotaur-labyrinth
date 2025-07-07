@@ -1,12 +1,2 @@
-﻿  Player.cpp
-c:\users\teodo\documents\ftn\oop 2\projekat\oop2-projekat\minotaur\minotaur\player.cpp(148): warning C4018: '<': signed/unsigned mismatch
-c:\users\teodo\documents\ftn\oop 2\projekat\oop2-projekat\minotaur\minotaur\player.cpp(157): warning C4018: '<': signed/unsigned mismatch
-c:\users\teodo\documents\ftn\oop 2\projekat\oop2-projekat\minotaur\minotaur\player.cpp(158): warning C4018: '<': signed/unsigned mismatch
-  Item.cpp
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  Minotaur.cpp
-  Gameplay.cpp
-  Game.cpp
-  Minotaur.vcxproj -> C:\Users\teodo\Documents\FTN\OOP 2\Projekat\oop2-projekat\Minotaur\Debug\Minotaur.exe
+﻿  Minotaur.vcxproj -> C:\Users\teodo\Documents\FTN\OOP 2\Projekat\oop2-projekat\Minotaur\Debug\Minotaur.exe
   Minotaur.vcxproj -> C:\Users\teodo\Documents\FTN\OOP 2\Projekat\oop2-projekat\Minotaur\Debug\Minotaur.pdb (Full PDB)
