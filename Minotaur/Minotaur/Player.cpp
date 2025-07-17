@@ -167,7 +167,7 @@ void Player::remove_inactive_items() {
 
 
 ostream& operator<<(ostream& stream, const Player& obj) {
-	cout << "Player items:" << endl;
+	stream << "Player items:" << endl;
 	for (Item i : obj.items) {
 		stream << i;
 	}

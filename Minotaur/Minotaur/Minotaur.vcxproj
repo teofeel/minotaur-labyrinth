@@ -147,6 +147,8 @@
   <ItemGroup>
     <ClInclude Include="Cell.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameController.h" />
+    <ClInclude Include="GameSaver.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Labyrinth.h" />
     <ClInclude Include="Player.h" />
@@ -156,7 +158,9 @@
   <ItemGroup>
     <ClCompile Include="Cell.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameController.cpp" />
     <ClCompile Include="Gameplay.cpp" />
+    <ClCompile Include="GameSaver.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Labyrinth.cpp" />
     <ClCompile Include="Minotaur.cpp" />

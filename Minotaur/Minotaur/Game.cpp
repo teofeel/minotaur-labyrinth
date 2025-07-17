@@ -29,6 +29,14 @@ Game::Game(Labyrinth& m) : maze(m), player() {
 	}
 }
 
+Labyrinth& Game::getMaze() {
+	return this->maze;
+}
+
+Player& Game::getPlayer() {
+	return this->player;
+}
+
 void Game::setPlayer(Player& p) {
 	this->player = p;
 }
@@ -103,7 +111,6 @@ bool Game::move_player(char c) {
 	}
 
 	if (!this->check_can_move(x2, y2)) {
-		cout << "You can't move there" << endl;
 		return false;
 	}
 
@@ -114,14 +121,14 @@ bool Game::move_player(char c) {
 	// proveri da li je minotaur na x2 y2
 	if (this->maze.getMaze().at(x2).at(y2) == 'M' && !this->player.getCanKill()) {
 		this->maze.getMaze().at(x1).at(y1).setType(' ');
-
+		return true;
 	}
+
 	// proveri da li je P na x2 y2
-	else if (this->maze.getMaze().at(x2).at(y2) == 'P') {
+	if (this->maze.getMaze().at(x2).at(y2) == 'P') {
 		this->add_item_player();
 	}
 
-	// proveri da li je I na x2 y2
 
 	this->maze.getMaze().at(x1).at(y1).setType(' ');
 	this->maze.getMaze().at(x2).at(y2) = player;

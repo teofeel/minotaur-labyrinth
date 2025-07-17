@@ -22,7 +22,7 @@ public:
 	Game(Labyrinth& m);
 
 	Labyrinth& getMaze();
-	Player& getPLayer();
+	Player& getPlayer();
 
 	void setMaze(Labyrinth& m);
 	void setPlayer(Player& p);

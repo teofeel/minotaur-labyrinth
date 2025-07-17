@@ -9,9 +9,10 @@
 #include <tuple>
 #include "Labyrinth.h"
 #include "Cell.h"
+#include <time.h>
 
 using namespace std;
-std::mt19937 rng(std::random_device{}());
+
 
 /*
 	funkcija za kreiranje lavirinta/levela
@@ -33,11 +34,12 @@ void Labyrinth::dfs(int x, int y, int dx[], int dy[]) {
 
         vector<int> directions = {0, 1, 2, 3};
         //shuffle(directions.begin(), directions.end(), default_random_engine(rand()));
+		mt19937 rng(std::random_device{}());
 		shuffle(directions.begin(), directions.end(), rng);
 
         for (int d : directions) {
-            int nx = cx + 2* dx[d];
-            int ny = cy + 2* dy[d];
+            int nx = cx + 2*dx[d];
+            int ny = cy + 2*dy[d];
 
             if (nx >= 1 && nx < n-1 && ny >= 1 && ny < m-1 && matrix.at(nx).at(ny).getType() == '#') {
                 matrix.at(cx + dx[d]).at(cy + dy[d]).setType(' ');
@@ -70,7 +72,7 @@ bool Labyrinth::is_exit_reachable(int entrance_x, int entrance_y, int exit_index
 		tie(x, y) = to_visit.top();
 		to_visit.pop();
 
-		if (matrix.at(x+1).at(y).getType() == 'I') {
+		if (matrix.at(x).at(y).getType() == 'I') {
 			return true;
 		}
 
@@ -78,7 +80,8 @@ bool Labyrinth::is_exit_reachable(int entrance_x, int entrance_y, int exit_index
 			int nx = x + dx[d];
 			int ny = y + dy[d];
 
-			if (nx >= 1 && nx < n - 1 && ny >= 1 && ny < m - 1 && (matrix.at(nx).at(ny).getType() == ' ' || matrix.at(nx).at(ny).getType()=='R') && !visited[nx][ny]) {
+			if (nx >= 1 && nx < n - 1 && ny >= 1 && ny < m - 1 && (matrix.at(nx).at(ny).getType() == ' ' 
+				|| matrix.at(nx).at(ny).getType()=='R') && !visited[nx][ny]) {
 				visited[nx][ny] = true;
 				to_visit.push({ nx, ny });
 			}
@@ -96,11 +99,14 @@ bool Labyrinth::is_exit_reachable(int entrance_x, int entrance_y, int exit_index
 		isto vazi i za predmet, samo jos vodi racuna o broju predmeta i radi dok se svi ne generisu
 */
 void Labyrinth::create_minotaur_items() {
+	
 	do {
-		int minotaur_x = (rand() % (m - 2)) + 1;
-		int minotaur_y = (rand() % (n - 2)) + 1;
 
-		if (this->matrix.at(minotaur_y).at(minotaur_x).getType() == ' ') {
+		int minotaur_x = (rand() % ((m - 2) / 2)) + (m / 2);
+		int minotaur_y = (rand() % ((n - 2) / 2)) + (n / 2);
+
+		if (this->matrix.at(minotaur_y).at(minotaur_x).getType() == ' ' && this->matrix.at(minotaur_y-1).at(minotaur_x).getType() !='R'
+			&& this->matrix.at(minotaur_y).at(minotaur_x+1).getType() != 'R' && this->matrix.at(minotaur_y).at(minotaur_x - 1).getType() != 'R') {
 			this->matrix.at(minotaur_y).at(minotaur_x).setType('M');
 			break;
 		}
@@ -131,29 +137,35 @@ void Labyrinth::create_minotaur_items() {
 		sve celije, sem izlaza, se postavljaju na ' '
 */
 void Labyrinth::ensure_path_to_exit(int entrance_x, int entrance_y, int exit_index, int dx[], int dy[]) {
-	if (!is_exit_reachable(entrance_x, entrance_y, exit_index, dx, dy)) {
-		int current_x = entrance_x;
-		int current_y = entrance_y;
+	if (is_exit_reachable(entrance_x, entrance_y, exit_index, dx, dy)) {
+		return;
+	}
+	int closest_y = -1;
+	int min_distance = m + 10;
 
-		while (!(current_x == n - 2 && current_y == exit_index)) {
-			// Prvo pomeraj po Y osi
-			if (current_y < exit_index) current_y++;
-			else if (current_y > exit_index) current_y--;
-
-			if (current_x != n - 1 && matrix.at(current_x).at(current_y).getType() == '#') {
-				matrix.at(current_x).at(current_y).setType(' ');
+	for (int y = 1; y < m - 1; ++y) {
+		if (matrix[n - 2][y].getType() == ' ') {
+			int distance = abs(y - exit_index);
+			if (distance < min_distance) {
+				min_distance = distance;
+				closest_y = y;
 			}
+		}
+	}
 
-			// Onda po X osi
-			if (current_x < n - 2) current_x++;
-			else if (current_x > n - 2) current_x--;
+	if (closest_y != -1) {
+		int y = closest_y;
+		while (y != exit_index) {
+			if (y < exit_index) ++y;
+			else if (y > exit_index) --y;
 
-			if (current_x != n - 1 && matrix.at(current_x).at(current_y).getType() == '#') {
-				matrix.at(current_x).at(current_y).setType(' ');
+			if (matrix[n - 2][y].getType() == '#') {
+				matrix[n - 2][y].setType(' ');
 			}
 		}
 
-		matrix.at(n - 1).at(exit_index).setType('I');
+		matrix[n - 1][exit_index].setType('I');
+		matrix[n - 2][exit_index].setType(' ');
 	}
 }
 
@@ -166,6 +178,7 @@ void Labyrinth::ensure_path_to_exit(int entrance_x, int entrance_y, int exit_ind
 		pun zid se smatra jedino ako je '#'
 */
 void Labyrinth::break_full_walls() {
+	
 	for (int i = 1; i < this->n-1; i++) {
 		bool full_wall = true;
 
@@ -186,7 +199,7 @@ void Labyrinth::break_full_walls() {
 			}
 		}
 	}
-
+	
 	for (int j = 1; j < this->m - 1; j++) {
 		bool full_wall = true;
 		for (int i = 1; i < this->n - 1; i++) {
@@ -215,6 +228,8 @@ void Labyrinth::break_full_walls() {
 		poziva funkcije za kreiranje prolaza, minotaura, predmeta i provere
 */
 void Labyrinth::create_matrix() {
+	srand(time(nullptr));
+
 	int entrance_index = (rand() % (m - 2))+1;
 	int exit_index = (rand() % (m - 2)) + 1;
 	
