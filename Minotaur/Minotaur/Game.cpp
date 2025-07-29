@@ -15,7 +15,7 @@ using namespace std;
 
 
 
-Game::Game(Labyrinth& m) : maze(m), player() {
+Game::Game(Labyrinth& m) : maze(m), player(), minotaur() {
 	for (int i = 0; i < this->maze.getN(); i++) {
 		
 		for (int j = 0; j < this->maze.getM(); j++) {
@@ -24,6 +24,11 @@ Game::Game(Labyrinth& m) : maze(m), player() {
 				this->player.setI(i);
 				this->player.setJ(j);
 				this->player.setType('R');
+			}
+			else if (maze.getMaze().at(i).at(j) == 'M') {
+				this->minotaur.setI(i);
+				this->minotaur.setJ(j);
+				this->minotaur.setType('M');
 			}
 		}
 	}
@@ -121,6 +126,7 @@ bool Game::move_player(char c) {
 	// proveri da li je minotaur na x2 y2
 	if (this->maze.getMaze().at(x2).at(y2) == 'M' && !this->player.getCanKill()) {
 		this->maze.getMaze().at(x1).at(y1).setType(' ');
+		this->minotaur.setIsAlive(false);
 		return true;
 	}
 
@@ -131,7 +137,7 @@ bool Game::move_player(char c) {
 
 
 	this->maze.getMaze().at(x1).at(y1).setType(' ');
-	this->maze.getMaze().at(x2).at(y2) = player;
+	this->maze.getMaze().at(x2).at(y2).setType('R');
 
 	this->player.setI(x2);
 	this->player.setJ(y2);
@@ -139,27 +145,32 @@ bool Game::move_player(char c) {
 	return true;
 }
 
+
 /*
-	Pomocna funkcija za pomeranje minotaura
-	Parametri: 
-		-m,n (pozicija minotaura)
+	funkcija za pomeranje minotaura
 	Opis:
-		generisanje novih mogucih pozicija za minotaura i provera pomneranja minotaura na njih
-		ako se player nalazi do minotaura i moze da ga ubije, pomera se na tu
-		na kraju se od mogucih pozicija koje su prosle uslove bira jedna
+		prvo pronadje minotaura u lavirintu 
+		zatim prosledi njegove parametre pomocnoj za pomeranje minotaura
 */
-void Game::move_minotaur_helper(int m, int n) {
-	vector<pair<int, int>> new_coordinates = { {m + 1, n}, {m - 1,n}, {m, n + 1}, {m, n-1} };
+void Game::move_minotaur() {
+	if (!this->minotaur.getIsAlive())
+		return;
+
+	int m = this->minotaur.getI(), n = this->minotaur.getJ();
+
+	vector<std::pair<int, int>> new_coordinates = { { m + 1, n },{ m - 1,n },{ m, n + 1 },{ m, n - 1 } };
 	vector<int> remove_indexes;
 
+	//cout << m << " " << n << endl;
 	for (int i = 0; i < new_coordinates.size(); i++) {
-	
-		if (new_coordinates.at(i).first <= 0 || new_coordinates.at(i).first >= this->maze.getM()
-			|| new_coordinates.at(i).second <= 0 || new_coordinates.at(i).second >= this->maze.getN()) {
+		//cout << i << endl;
+		if (new_coordinates.at(i).first <= 0 || new_coordinates.at(i).first > this->maze.getN()
+			|| new_coordinates.at(i).second <= 0 || new_coordinates.at(i).second > this->maze.getM()) {
+
 			remove_indexes.push_back(i);
 			continue;
 		}
-			
+
 		// check surrounding cells if there is wall or player
 		if (this->maze.getMaze().at(new_coordinates.at(i).first).at(new_coordinates.at(i).second) == '#') {
 			remove_indexes.push_back(i);
@@ -177,48 +188,39 @@ void Game::move_minotaur_helper(int m, int n) {
 			continue;
 		}
 		/*else if (this->maze.getMaze().at(new_coordinates.at(i).first).at(new_coordinates.at(i).second) == 'R' && this->player.getCanDefend()) {
-			remove_indexes.push_back(i);
-			continue;
+		remove_indexes.push_back(i);
+		continue;
 		}*/
 		else if (this->maze.getMaze().at(new_coordinates.at(i).first).at(new_coordinates.at(i).second) == 'R') {
 			this->maze.getMaze().at(m).at(n).setType(' ');
+			//this->maze.getMaze().at(new_coordinates.at(i).first).at(new_coordinates.at(i).second).setType('M');
 			this->maze.getMaze().at(new_coordinates.at(i).first).at(new_coordinates.at(i).second).setType('M');
+			this->minotaur.setI(new_coordinates.at(i).first);
+			this->minotaur.setJ(new_coordinates.at(i).second);
 
 			return;
 		}
 	}
 
-	for (int i = remove_indexes.size()-1; i >= 0; i--) {
+	for (int i = remove_indexes.size() - 1; i >= 0; i--) {
 		new_coordinates.erase(new_coordinates.begin() + remove_indexes.at(i));
 	}
+
+	if (new_coordinates.size() == 0)
+		return;
 
 	// if not choose random cell to move
 	int new_coordinates_len = new_coordinates.size();
 	int pair = rand() % new_coordinates_len;
 	this->maze.getMaze().at(m).at(n).setType(' ');
 
+	//cout << "ovde smo" << endl;
+
+	//this->maze.getMaze().at(new_coordinates.at(pair).first).at(new_coordinates.at(pair).second).setType('M');
 	this->maze.getMaze().at(new_coordinates.at(pair).first).at(new_coordinates.at(pair).second).setType('M');
-
-}
-
-/*
-	funkcija za pomeranje minotaura
-	Opis:
-		prvo pronadje minotaura u lavirintu 
-		zatim prosledi njegove parametre pomocnoj za pomeranje minotaura
-*/
-void Game::move_minotaur() {
-	// scan maze to find M
-	for(int i=0; i< this->maze.getN(); i++){
-		for (int j = 0; j < this->maze.getM(); j++) {
-			if (this->maze.getMaze().at(i).at(j) == 'M') {
-				// once found M save coordinates
-				move_minotaur_helper(i, j);
-				return;
-			}
-
-		}
-	}
+	this->minotaur.setI(new_coordinates.at(pair).first);
+	this->minotaur.setJ(new_coordinates.at(pair).second);
+	//this->move_minotaur_helper(this->minotaur.getI(), this->minotaur.getJ());
 }
 
 

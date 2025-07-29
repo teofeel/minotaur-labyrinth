@@ -45,6 +45,9 @@
     <ClInclude Include="GameSaver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MinotaurFigure.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -68,13 +71,13 @@
     <ClCompile Include="Item.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Gameplay.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GameController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GameSaver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MinotaurFigure.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

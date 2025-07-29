@@ -88,12 +88,12 @@ void GameController::load_game(char* argv[]) {
 	if (o < 3) return;
 	if (o > 2 * (m + n)) return;
 
-	auto start = high_resolution_clock::now();
+	time_point<high_resolution_clock> start = high_resolution_clock::now();
 
 	Labyrinth maze(n, m, o);
 
-	auto end = high_resolution_clock::now();
-	auto duration = duration_cast<microseconds>(end - start);
+	time_point<high_resolution_clock> end = high_resolution_clock::now();
+	microseconds duration = duration_cast<microseconds>(end - start);
 	cout << "Duration to create maze: " << duration.count() << " microseconds" << endl;
 
 	Game game(maze);

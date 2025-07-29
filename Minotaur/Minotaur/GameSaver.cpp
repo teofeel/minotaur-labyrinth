@@ -34,7 +34,7 @@ string GameSaver::get_winner(Game &g) {
 		return "Player escaped\n";
 	}
 	
-	return "Game ended somehow\n";
+	return "Game ended\n";
 
 }
 

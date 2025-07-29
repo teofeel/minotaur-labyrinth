@@ -4,6 +4,7 @@
 
 #include "Labyrinth.h"
 #include "Player.h"
+#include "MinotaurFigure.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -14,10 +15,10 @@ class Game {
 private:
 	Labyrinth maze;
 	Player player;
+	MinotaurFigure minotaur;
 
 	bool check_can_move(int x, int y);								// provera mogucnosti kretanja za playera
 	void add_item_player();											// dodavanje itema playeru, od ponudjenih mogucnosti odabere jednu i dodeli playeru
-	void move_minotaur_helper(int m, int n);						// helper za pomeranje minotaura, vrsi proveru mogucnosti za pomeranje i random izabere
 public:
 	Game(Labyrinth& m);
 
