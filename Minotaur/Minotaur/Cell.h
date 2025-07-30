@@ -5,7 +5,7 @@
 using namespace std;
 
 class Cell {
-private:
+protected:
 	int i;
 	int j;
 	char type;
